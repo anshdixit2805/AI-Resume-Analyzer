@@ -54,9 +54,9 @@ def callback():
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    if 'user' not in session:
-        return redirect(url_for('login'))
-
+    # TEMP FIX - disable login
+# if 'user' not in session:
+#     return redirect(url_for('login'))
     if request.method == 'POST':
         resume = request.form.get('resume')
 
