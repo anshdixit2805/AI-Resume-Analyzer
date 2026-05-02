@@ -406,6 +406,35 @@ canvas {
     max-width: 400px;
 }
 
+.circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: conic-gradient(
+        #ff6a00 calc({{ score }} * 1%),
+        rgba(255,255,255,0.1) 0
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px auto;
+}
+
+.inner {
+    width: 110px;
+    height: 110px;
+    background: #020617;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.container {
+    animation: fadeIn 1s ease-in-out;
+}
+button:active {
+    transform: scale(0.95);
+}
 </style>
 </head>
     
@@ -487,6 +516,8 @@ canvas {
 
 <hr>
 <h2>📊 ATS Score Breakdown</h2>
+<h2>📊 ATS Comparison</h2>
+<canvas id="barChart"></canvas>
 <h2>🥧 Skill Distribution</h2>
 <canvas id="skillPieChart" width="300" height="300"></canvas>
 <div class="breakdown">
@@ -675,28 +706,21 @@ document.addEventListener("mousemove", (e) => {
 <script>
 const pieCtx = document.getElementById('skillPieChart').getContext('2d');
 
-const skillPieChart = new Chart(pieCtx, {
-    type: 'pie',
+new Chart(pieCtx, {
+    type: 'doughnut',   // 👈 better than pie (premium look)
     data: {
         labels: ['Matched Skills', 'Missing Skills'],
         datasets: [{
-            data: [
-                {{ matched|length }},
-                {{ missing_skills|length }}
-            ],
-            backgroundColor: [
-                '#22c55e',  // green
-                '#ef4444'   // red
-            ],
-            borderWidth: 1
+            data: [{{ matched|length }}, {{ missing_skills|length }}],
+            backgroundColor: ['#22c55e', '#ef4444'],
+            borderWidth: 0
         }]
     },
     options: {
+        cutout: '65%',   // 👈 makes it donut style
         plugins: {
             legend: {
-                labels: {
-                    color: 'white'
-                }
+                labels: { color: 'white' }
             }
         }
     }
@@ -722,25 +746,75 @@ new Chart(radarCtx, {
         datasets: [{
             label: 'Skill Strength',
             data: skillData,
-            backgroundColor: 'rgba(34,197,94,0.2)',
-            borderColor: '#22c55e',
-            borderWidth: 2,
-            pointBackgroundColor: '#22c55e'
+            backgroundColor: 'rgba(255,106,0,0.2)',
+            borderColor: '#ff6a00',
+            pointBackgroundColor: '#ff6a00',
+            borderWidth: 2
         }]
     },
     options: {
-        responsive: true,
         scales: {
             r: {
                 min: 0,
                 max: 100,
-                angleLines: { color: "rgba(255,255,255,0.2)" },
                 grid: { color: "rgba(255,255,255,0.1)" },
+                angleLines: { color: "rgba(255,255,255,0.2)" },
                 pointLabels: { color: "white" }
             }
         },
         plugins: {
             legend: { display: false }
+        }
+    }
+});
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+new Chart(document.getElementById("barChart"), {
+    type: "bar",
+    data: {
+        labels: ["Skills", "Keywords", "Length"],
+        datasets: [{
+            data: [{{skills_score}}, {{keyword_score}}, {{length_score}}],
+            backgroundColor: ["#22c55e", "#3b82f6", "#f59e0b"]
+        }]
+    },
+    options: {
+        plugins: { legend: { display: false } },
+        scales: {
+            x: { ticks: { color: "white" } },
+            y: { ticks: { color: "white" } }
+        }
+    }
+});
+</script>
+<script>
+const barCtx = document.getElementById('barChart').getContext('2d');
+
+new Chart(barCtx, {
+    type: 'bar',
+    data: {
+        labels: ['Skills', 'Keywords', 'Length'],
+        datasets: [{
+            label: 'ATS Score',
+            data: [{{ skills_score }}, {{ keyword_score }}, {{ length_score }}],
+            backgroundColor: ['#22c55e', '#3b82f6', '#facc15']
+        }]
+    },
+    options: {
+        plugins: {
+            legend: { display: false }
+        },
+        scales: {
+            x: {
+                ticks: { color: 'white' }
+            },
+            y: {
+                ticks: { color: 'white' },
+                beginAtZero: true,
+                max: 100
+            }
         }
     }
 });
