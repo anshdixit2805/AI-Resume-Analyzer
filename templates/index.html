@@ -209,9 +209,22 @@ button {
     width: 100%;
     font-weight: bold;
 }
+.container {
+    animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 </style>
 </head>
-<body>
 <body>
 
     <div class="floating-icons">
@@ -229,7 +242,10 @@ button {
     <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" width="80">
 
     <div class="container">
-        <h2>Paste Your Resume</h2>
+        <h2>Analyze Your Resume</h2>
+<p style="color:#ccc; font-size:14px;">
+Paste your resume or upload a PDF to get AI-powered insights
+</p>
         <form method="POST" enctype="multipart/form-data">
 
     <label>Select Job Role</label><br>
@@ -242,12 +258,13 @@ button {
     <br><br>
 
     <label>Paste Resume</label>
-    <textarea name="resume" placeholder="Paste your resume here..."></textarea>
+    <textarea name="resume" placeholder="Paste your resume here (or upload PDF below)..."></textarea>
 
     <p style="margin:10px 0; color:#ccc;">OR</p>
 
     <label class="upload-box">
-        📄 Click to Upload Resume (PDF)
+    📄 <strong>Click to Upload Resume (PDF)</strong><br>
+    <span style="font-size:12px; color:#ccc;">Only PDF files supported</span>
         <input type="file" name="resume_pdf" accept="application/pdf">
     </label>
 
