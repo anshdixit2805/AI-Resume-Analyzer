@@ -163,6 +163,52 @@ h1 {
 .progress-bar {
     width: 100%;
 }
+/* Input field style */
+.input-field {
+    width: 95%;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    margin-top: 5px;
+}
+
+/* Upload box */
+.upload-box {
+    display: block;
+    border: 2px dashed #aaa;
+    padding: 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.3s;
+    background: rgba(255,255,255,0.05);
+}
+
+.upload-box:hover {
+    border-color: #ff6a00;
+    background: rgba(255,255,255,0.1);
+}
+
+/* Hide default file input */
+.upload-box input {
+    display: none;
+}
+
+/* Improve textarea */
+textarea {
+    width: 95%;
+    height: 150px;
+    padding: 12px;
+    border-radius: 12px;
+    border: none;
+    resize: none;
+    font-size: 14px;
+}
+
+/* Button full width */
+button {
+    width: 100%;
+    font-weight: bold;
+}
 </style>
 </head>
 <body>
@@ -184,19 +230,39 @@ h1 {
 
     <div class="container">
         <h2>Paste Your Resume</h2>
-        <form method="POST">
-            <label for="role">Select Job Role:</label>
-            <select name="role" required>
-            <option value="data_scientist">Data Scientist</option>
-            <option value="web_developer">Web Developer</option>
-            <option value="ai_engineer">AI Engineer</option>
-        </select>
-        
-            <textarea name="resume" placeholder="Paste your resume here..."></textarea><br><br>
-            
-            <button type="submit">Analyze Resume</button>
-        </form>
-    </div>
+        <form method="POST" enctype="multipart/form-data">
 
+    <label>Select Job Role</label><br>
+    <select name="role" required class="input-field">
+        <option value="data_scientist">Data Scientist</option>
+        <option value="web_developer">Web Developer</option>
+        <option value="ai_engineer">AI Engineer</option>
+    </select>
+
+    <br><br>
+
+    <label>Paste Resume</label>
+    <textarea name="resume" placeholder="Paste your resume here..."></textarea>
+
+    <p style="margin:10px 0; color:#ccc;">OR</p>
+
+    <label class="upload-box">
+        📄 Click to Upload Resume (PDF)
+        <input type="file" name="resume_pdf" accept="application/pdf">
+    </label>
+
+    <p id="file-name" style="color:#aaa;"></p>
+
+    <br>
+
+    <button type="submit">🚀 Analyze Resume</button>
+
+</form>
+    </div>
+<script>
+document.querySelector('input[type="file"]').addEventListener('change', function() {
+    document.getElementById('file-name').innerText = this.files[0]?.name || "";
+});
+</script>
 </body>
 </html>

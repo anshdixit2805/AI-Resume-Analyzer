@@ -1,4 +1,5 @@
 import os
+import PyPDF2
 import requests
 from flask import session, redirect, url_for
 from flask import Flask, request, render_template
@@ -57,7 +58,22 @@ def index():
         return redirect(url_for('login'))
 
     if request.method == 'POST':
-        resume = request.form['resume']
+        resume = request.form.get('resume')
+
+        uploaded_file = request.files.get('resume_pdf')
+
+        # If PDF uploaded → extract text
+        if uploaded_file and uploaded_file.filename != "":
+            pdf_reader = PyPDF2.PdfReader(uploaded_file)
+            pdf_text = ""
+
+            for page in pdf_reader.pages:
+                if page.extract_text():
+                    pdf_text += page.extract_text()
+
+            resume = pdf_text
+        if not resume:
+            return "Please paste resume or upload PDF"
         role = request.form['role']
 
         # NLU ANALYSIS
@@ -106,6 +122,7 @@ def index():
             score = int((len(matched) / len(job_skills)) * 100)
         else:
             score = 0
+            
             # -------- ATS BREAKDOWN --------
 
             # 1. Skills Score
