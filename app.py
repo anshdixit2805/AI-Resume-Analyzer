@@ -29,6 +29,7 @@ client.connect()
 db = client.create_database("resume_db", throw_on_exists=False)
 @app.route('/login')
 def login():
+    print("REDIRECT_URI USED:", REDIRECT_URI)
     auth_url = f"{OAUTH_URL}/authorization?response_type=code&client_id={CLIENT_ID}&redirect_uri={REDIRECT_URI}&scope=openid"
     return redirect(auth_url)
 
