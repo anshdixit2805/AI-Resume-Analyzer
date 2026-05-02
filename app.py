@@ -1,3 +1,4 @@
+import os
 import requests
 from flask import session, redirect, url_for
 from flask import Flask, request, render_template
@@ -6,20 +7,20 @@ from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 from cloudant.client import Cloudant
 
 app = Flask(__name__)
-app.secret_key = "supersecretkey"
+app.secret_key = os.environ.get("SECRET_KEY")
 
-CLIENT_ID = "49b2920c-d783-4503-9d68-5ab4f108b7eb"
-CLIENT_SECRET = "ODY2MzJmMTEtNmRjYS00MjRkLWIwYTgtNThhMzgyYWZjMDkz"
-OAUTH_URL = "https://au-syd.appid.cloud.ibm.com/oauth/v4/41e75de8-3af2-4fa6-862d-591e2d32b251"
-REDIRECT_URI = "http://localhost:5000/callback"
+CLIENT_ID = os.environ.get("APPID_CLIENT_ID")
+CLIENT_SECRET = os.environ.get("APPID_CLIENT_SECRET")
+OAUTH_URL = os.environ.get("APPID_OAUTH_URL")
+REDIRECT_URI = os.environ.get("REDIRECT_URI")
 
 # -------- NLU SETUP --------
-authenticator = IAMAuthenticator('qlB2smPV2Is8HMRFvCVlGG997sV3OitnSEJriUmQlMsa')
+authenticator = IAMAuthenticator(os.environ.get("IBM_NLU_APIKEY"))
 nlu = NaturalLanguageUnderstandingV1(
     version='2022-04-07',
     authenticator=authenticator
 )
-nlu.set_service_url('https://api.au-syd.natural-language-understanding.watson.cloud.ibm.com/instances/0512f38e-4498-44df-a630-1bfb58f2385d')
+nlu.set_service_url(os.environ.get("IBM_NLU_URL"))
 
 # -------- CLOUDANT SETUP --------
 client = Cloudant("apikey-v2-1d0n6jkbpcl2fy5utu5af1s02m5dtpjje8igo3j9t65r", "73e5fdfb01638ff91478effe3fd5725a", url="https://apikey-v2-1d0n6jkbpcl2fy5utu5af1s02m5dtpjje8igo3j9t65r:73e5fdfb01638ff91478effe3fd5725a@dd45670d-4c3e-48e3-b139-3ea148e3430a-bluemix.cloudantnosqldb.appdomain.cloud")
@@ -179,4 +180,6 @@ def index():
 
     return render_template("index.html")
 
-app.run(debug=True)
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port, debug=False)
