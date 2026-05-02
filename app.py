@@ -116,46 +116,64 @@ def index():
         for skill in job_skills:
            if skill in resume_text:
                matched.append(skill)
+        
+        skill_categories = {
+                    "Programming": 0,
+                    "Data": 0,
+                    "AI/ML": 0,
+                    "Web": 0
+                }
 
+        for skill in matched:
+            if skill in ["python", "java", "c++"]:
+                skill_categories["Programming"] += 1
+            elif skill in ["sql", "data analysis", "statistics"]:
+                skill_categories["Data"] += 1
+            elif skill in ["machine learning", "deep learning", "nlp"]:
+                skill_categories["AI/ML"] += 1
+            elif skill in ["html", "css", "javascript", "react", "node.js"]:
+                skill_categories["Web"] += 1
         # Better scoring
         if len(job_skills) > 0:
             score = int((len(matched) / len(job_skills)) * 100)
         else:
             score = 0
             
-            # -------- ATS BREAKDOWN --------
+        # -------- ATS BREAKDOWN --------
 
-            # 1. Skills Score
-            if len(job_skills) > 0:
-                skills_score = int((len(matched) / len(job_skills)) * 100)
-            else:
-                skills_score = 0
+        # 1. Skills Score
+        if len(job_skills) > 0:
+            skills_score = int((len(matched) / len(job_skills)) * 100)
+        else:
+            skills_score = 0
 
-            # 2. Keyword Score
-            keyword_score = min(len(keywords) * 10, 100)
+        # 2. Keyword Score
+        keyword_score = min(len(keywords) * 10, 100)
 
-            # 3. Resume Length Score
-            word_count = len(resume.split())
+        # 3. Resume Length Score
+        word_count = len(resume.split())
 
-            if word_count > 150:
-                length_score = 100
-            elif word_count > 100:
-                length_score = 70
-            elif word_count > 50:
-                length_score = 50
-            else:
-                length_score = 30
+        if word_count > 150:
+            length_score = 100
+        elif word_count > 100:
+            length_score = 70
+        elif word_count > 50:
+            length_score = 50
+        else:
+            length_score = 30
 
-            # 4. FINAL ATS SCORE (overwrite old score)
-            score = int((skills_score + keyword_score + length_score) / 3)
+        # 4. FINAL ATS SCORE (overwrite old score)
+        score = int((skills_score + keyword_score + length_score) / 3)
 
-            # STORE IN CLOUDANT
-            doc = {
+        # STORE IN CLOUDANT
+        doc = {
                 "resume": resume,
                 "keywords": keywords,
-                "entities": entities
+                "entities": entities,
+                "score": score,
+                "role": role
             }
-            db.create_document(doc)
+        db.create_document(doc)
 
         # -------- AI SUGGESTIONS --------
 
@@ -182,20 +200,30 @@ def index():
             suggestions.append("Your resume is too short. Add more details about your experience and projects.")
 
         return render_template("result.html",
-                 keywords=keywords,
-                 entities=entities,
-                 score=score,
-                 matched=matched,
-                 missing_skills=missing_skills,
-                 suggestions=suggestions,
-                 role=role,
-                 skills_score=skills_score,
-                 keyword_score=keyword_score,
-                 length_score=length_score,
-                 job_match_score=job_match_score
-            )
+                    keywords=keywords,
+                    entities=entities,
+                    score=score,
+                    matched=matched,
+                    missing_skills=missing_skills,
+                    suggestions=suggestions,
+                    role=role,
+                    skills_score=skills_score,
+                    keyword_score=keyword_score,
+                    length_score=length_score,
+                    job_match_score=job_match_score,
+
+                    # 🔥 NEW
+                    skill_categories=skill_categories,
+                    growth_data=growth_data
+                )
 
     return render_template("index.html")
+    growth_data = [
+    {"version": "V1", "score": max(score - 30, 10)},
+    {"version": "V2", "score": max(score - 20, 20)},
+    {"version": "V3", "score": max(score - 10, 30)},
+    {"version": "Current", "score": score}
+]
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
