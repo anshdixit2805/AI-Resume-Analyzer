@@ -328,14 +328,19 @@ h1 {
     display: inline-block;
     padding: 6px 12px;
     margin: 5px;
+
     border-radius: 20px;
+    font-size: 14px;
+
     background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+
     transition: 0.3s;
 }
 
 .tag:hover {
-    transform: scale(1.2);
-    background: linear-gradient(45deg, #ff6a00, #ee0979);
+    transform: scale(1.2) rotate(-2deg);
+    background: #ff6a00;
 }
 
 .green {
@@ -463,15 +468,6 @@ button:active {
 .card:hover {
     transform: translateY(-8px);
     box-shadow: 0 0 25px rgba(255,106,0,0.4);
-}
-button {
-    width: auto;
-    padding: 12px 20px;
-    font-weight: bold;
-}
-
-button:hover {
-    box-shadow: 0 0 20px rgba(255,106,0,0.6);
 }
 </style>
 </head>
@@ -690,11 +686,7 @@ background:
     {% endfor %}
 </ul>
 
-        <div style="margin-top: 20px;">
-    <button onclick="window.print()">📄 Download Report</button>
-    <br><br>
-    <a href="/">Analyze Another Resume</a>
-</div>
+        <a href="/">Analyze Another Resume</a>
 
     </div>
 <script>
@@ -891,35 +883,6 @@ new Chart(barCtx, {
     }
 });
 </script>
-<script>
-let target = {{ score }};   // final score from Flask
-let count = 0;
 
-let interval = setInterval(() => {
-
-    if (count >= target) {
-        clearInterval(interval);   // stop when reached
-    }
-
-    document.getElementById("scoreCounter").innerText = count + "%";
-
-    count++;
-
-}, 20);   // speed (smaller = faster)
-</script>
-<script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
-
-<div id="particles-js"></div>
-
-<script>
-tsParticles.load("particles-js", {
-  particles: {
-    number: { value: 40 },
-    size: { value: 2 },
-    move: { speed: 1 },
-    color: { value: "#ffffff" }
-  }
-});
-</script>
 </body>
 </html>
