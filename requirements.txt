@@ -1,0 +1,7 @@
+flask
+gunicorn
+requests
+PyPDF2
+ibm-watson
+ibm-cloud-sdk-core
+cloudant
