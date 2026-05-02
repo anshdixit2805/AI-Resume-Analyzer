@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Analysis Result</title>
+  <style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    color: white;
+    text-align: center;
+
+    background: linear-gradient(-45deg, #020617, #0f172a, #1e293b, #020617);
+    background-size: 400% 400%;
+    animation: bgMove 12s ease infinite;
+
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+@keyframes bgMove {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, #3b82f6, transparent);
+    top: -100px;
+    left: -100px;
+    opacity: 0.3;
+    filter: blur(100px);
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, #9333ea, transparent);
+    bottom: -100px;
+    right: -100px;
+    opacity: 0.3;
+    filter: blur(100px);
+}
+/* 🔥 Animated Gradient */
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* 🫧 Bubbles */
+.floating-icons span {
+    position: absolute;
+    bottom: -50px;
+    font-size: 30px;
+    animation: floatUp 10s infinite ease-in;
+    opacity: 0.7;
+}
+
+/* Different positions + speeds */
+.floating-icons span:nth-child(1) { left: 10%; animation-duration: 8s; }
+.floating-icons span:nth-child(2) { left: 30%; animation-duration: 12s; }
+.floating-icons span:nth-child(3) { left: 50%; animation-duration: 10s; }
+.floating-icons span:nth-child(4) { left: 70%; animation-duration: 14s; }
+.floating-icons span:nth-child(5) { left: 90%; animation-duration: 9s; }
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-900px);
+        opacity: 0;
+    }
+}
+
+/* Layer fix */
+.floating-icons {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+
+    pointer-events: none; /* important */
+    z-index: 1;
+}
+
+.container {
+    margin-top: 40px;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    padding: 30px;
+    width: 90%;
+    max-width: 1000px;
+
+    border-radius: 20px;
+
+    border: 1px solid rgba(255,255,255,0.15);
+
+    box-shadow:
+        0 8px 32px rgba(0,0,0,0.5),
+        inset 0 0 20px rgba(255,255,255,0.05);
+
+    position: relative;
+    z-index: 2;
+}
+
+/* ✨ Inputs */
+textarea {
+    width: 90%;
+    height: 150px;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+}
+
+/* 🔥 Button */
+button {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+
+    padding: 12px 25px;
+    border-radius: 25px;
+    color: white;
+
+    backdrop-filter: blur(10px);
+
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: linear-gradient(45deg, #ff6a00, #ee0979);
+    transform: scale(1.1);
+    box-shadow: 0 0 20px #ff6a00;
+}
+
+/* 📦 Lists */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    background: rgba(255,255,255,0.2);
+    margin: 5px;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+/* 🔗 Link button */
+a {
+    display: inline-block;
+    margin-top: 20px;
+    text-decoration: none;
+    color: white;
+    background: #ff6a00;
+    padding: 10px 20px;
+    border-radius: 20px;
+}
+/* 📊 Progress Bar */
+.progress-bar {
+    width: 80%;
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+    margin: auto;
+    overflow: hidden;
+}
+
+.progress {
+    height: 20px;
+    background: linear-gradient(90deg, #ff6a00, #ee0979);
+    animation: load 2s ease-in-out;
+}
+
+@keyframes load {
+    from { width: 0; }
+}
+
+/* 🧠 Skill Cards */
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.card {
+    position: relative;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(20px);
+
+    border-radius: 15px;
+    padding: 20px;
+    overflow: hidden;
+
+    border: 1px solid rgba(255,255,255,0.1);
+
+    transition: 0.4s;
+}
+
+.card::after {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: 15px;
+    background: linear-gradient(120deg, #ff6a00, #ee0979, #3b82f6);
+    z-index: -1;
+    opacity: 0;
+    transition: 0.4s;
+}
+
+.card:hover::after {
+    opacity: 1;
+}
+
+.card:hover {
+    transform: translateY(-10px) scale(1.03);
+    box-shadow:
+        0 20px 40px rgba(0,0,0,0.6),
+        0 0 20px rgba(255,106,0,0.3);
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 15px;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.2), transparent);
+    opacity: 0;
+    transition: 0.3s;
+}
+
+.card:hover::before {
+    opacity: 1;
+}
+
+h1 {
+    margin-top: 30px;
+}
+
+.container h3 {
+    margin-top: 20px;
+}
+.progress-bar {
+    width: 100%;
+}
+
+/* 💡 Suggestions UI */
+.suggestions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.suggestion-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: rgba(255,255,255,0.08);
+    padding: 15px;
+    border-radius: 12px;
+    border-left: 4px solid #9333ea;
+    transition: 0.3s;
+}
+
+.suggestion-card:hover {
+    transform: translateX(5px);
+    background: rgba(255,255,255,0.15);
+}
+
+.icon {
+    font-size: 20px;
+}
+
+.text {
+    font-size: 14px;
+    color: #ddd;
+}
+.score-card {
+    margin: 20px auto;
+    padding: 25px;
+    border-radius: 20px;
+    text-align: center;
+    background: linear-gradient(135deg, #ff6a00, #ee0979);
+    box-shadow: 0 0 25px rgba(0,0,0,0.4);
+    animation: fadeIn 1s ease-in-out;
+}
+
+.score-card h2 {
+    margin: 0;
+    font-size: 18px;
+    opacity: 0.9;
+}
+
+.score-card h1 {
+    margin: 10px 0 0;
+    font-size: 40px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.skills-container {
+    margin-top: 20px;
+}
+
+.tag {
+    display: inline-block;
+    padding: 6px 12px;
+    margin: 5px;
+
+    border-radius: 20px;
+    font-size: 14px;
+
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+
+    transition: 0.3s;
+}
+
+.tag:hover {
+    transform: scale(1.2) rotate(-2deg);
+    background: #ff6a00;
+}
+
+.green {
+    background: #22c55e;
+    color: white;
+}
+
+.red {
+    background: #ef4444;
+    color: white;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.breakdown {
+    margin-top: 25px;
+    width: 100%;
+}
+
+.bar {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.label {
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.bar span {
+    font-size: 12px;
+    color: #ccc;
+}
+
+/* Progress Bar */
+.progress-bar {
+    width: 100%;
+    height: 12px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+/* Animated Fill */
+.progress {
+    height: 100%;
+    border-radius: 20px;
+    animation: loadBar 1.5s ease-in-out;
+}
+
+/* Animation */
+@keyframes loadBar {
+    from { width: 0; }
+}
+
+canvas {
+    margin-top: 20px;
+    max-width: 400px;
+}
+
+</style>
+</head>
+    
+<body>
+
+    <div class="floating-icons">
+    <span>💸</span>
+    <span>💼</span>
+    <span>🧠</span>
+    <span>📊</span>
+    <span>💰</span>
+</div>
+
+<div class="topbar">
+    <h2>📊 Resume Analysis Dashboard</h2>
+    <span class="status">AI Powered</span>
+</div>
+
+    <h1>🚀 AI Resume Analyzer</h1>
+<p>Smart Resume Screening using IBM Watson</p>
+
+<h3>Selected Role: {{ role }}</h3>
+
+    <!-- IMAGE -->
+    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" width="80">
+
+    <div class="container">
+
+        <h3>Resume Score</h3>
+        <div class="score-card">
+    <h2>🎯 Job Match Score</h2>
+    <h1>{{ job_match_score }}%</h1>
+</div>
+<!-- Progress Bar -->
+<div class="progress-bar">
+    <div class="progress" style="
+        width: {{ job_match_score }}%;
+        background:
+        {% if job_match_score > 70 %}#22c55e
+        {% elif job_match_score > 40 %}#facc15
+        {% else %}#ef4444{% endif %};
+    "></div>
+</div>
+
+<div class="hero-score">
+    <h2>Your Resume Score</h2>
+    <h1>{{ score }}%</h1>
+</div>
+
+<button onclick="speakResult()">▶ Start</button>
+<button onclick="stopSpeech()">⏹ Stop</button>
+<label>Select Voice:</label>
+<select id="voiceSelect"></select>
+<br><br>
+
+<button onclick="speakResult()">🔊 Listen Analysis</button>
+<!-- Circular Meter -->
+<div class="circle">
+    <div class="inner">
+        <span>{{ score }}%</span>
+    </div>
+</div>
+
+
+<!-- Feedback -->
+{% if score > 70 %}
+<p style="color:lightgreen;">🔥 Excellent Resume</p>
+{% elif score > 40 %}
+<p style="color:yellow;">👍 Good but can improve</p>
+{% else %}
+<p style="color:red;">⚠️ Needs improvement</p>
+{% endif %}
+
+{% if score > 50 %}
+<p style="color:lightgreen;">✅ Strong Resume</p>
+{% else %}
+<p style="color:yellow;">⚠️ Improve Your Skills</p>
+{% endif %}
+
+<hr>
+<h2>📊 ATS Score Breakdown</h2>
+<h2>🥧 Skill Distribution</h2>
+<canvas id="skillPieChart" width="300" height="300"></canvas>
+<div class="breakdown">
+
+    <div class="bar">
+        <div class="label">Skills Match</div>
+        <div class="progress-bar">
+            <div class="progress" style="
+                width: {{ skills_score }}%;
+                   background:
+               {% if skills_score > 70 %}#22c55e
+               {% elif skills_score > 40 %}#facc15
+               {% else %}#ef4444{% endif %};
+                "></div>
+        </div>
+        <span>{{ skills_score }}%</span>
+    </div>
+
+    <div class="bar">
+        <div class="label">Keyword Optimization</div>
+        <div class="progress-bar">
+            <div class="progress" style="
+width: {{ keyword_score }}%;
+background:
+{% if keyword_score > 70 %}#22c55e
+{% elif keyword_score > 40 %}#facc15
+{% else %}#ef4444{% endif %};
+"></div>
+        </div>
+        <span>{{ keyword_score }}%</span>
+    </div>
+
+    <div class="bar">
+        <div class="label">Resume Length</div>
+        <div class="progress-bar">
+            <div class="progress" style="
+width: {{ length_score }}%;
+background:
+{% if length_score > 70 %}#22c55e
+{% elif length_score > 40 %}#facc15
+{% else %}#ef4444{% endif %};
+"></div>
+        </div>
+        <span>{{ length_score }}%</span>
+    </div>
+
+</div>
+<div class="grid">
+
+    <!-- 🧠 Skills -->
+    <div class="card">
+        <h3>Skills</h3>
+
+        <h4>Matched</h4>
+        {% for m in matched %}
+            <span class="tag green">{{ m }}</span>
+        {% endfor %}
+
+        <h4>Missing</h4>
+        {% for ms in missing_skills %}
+            <span class="tag red">{{ ms }}</span>
+        {% endfor %}
+    </div>
+
+    <!-- 💡 Suggestions -->
+    <div class="card">
+        <h3>AI Suggestions</h3>
+        <div class="suggestions">
+            {% for s in suggestions %}
+                <div class="suggestion-card">
+                    <div class="icon">🤖</div>
+                    <div class="text">{{ s }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- 📈 Keywords -->
+    <div class="card">
+        <h3>Keywords</h3>
+        <p>{{ keywords|length }} found</p>
+
+        {% for k in keywords %}
+            <span class="tag">{{ k }}</span>
+        {% endfor %}
+    </div>
+    <div class="card">
+    <h3>📊 Skill Radar</h3>
+    <p style="color:#aaa;">AI-based skill strength visualization</p>
+    <canvas id="radarChart" height="300"></canvas>
+</div>
+
+</div>
+<div class="footer">
+    Built with AI • Resume Analyzer
+</div>
+
+<h3>Entities</h3>
+<ul>
+    {% for e in entities %}
+    <li>{{ e }}</li>
+    {% endfor %}
+</ul>
+
+        <a href="/">Analyze Another Resume</a>
+
+    </div>
+<script>
+let speech;
+
+let voices = [];
+
+function loadVoices() {
+    voices = window.speechSynthesis.getVoices();
+
+    let voiceSelect = document.getElementById("voiceSelect");
+
+    voiceSelect.innerHTML = "";
+
+    voices.forEach((voice, index) => {
+        let option = document.createElement("option");
+        option.value = index;
+        option.innerHTML = voice.name + " (" + voice.lang + ")";
+        voiceSelect.appendChild(option);
+    });
+}
+
+window.speechSynthesis.onvoiceschanged = loadVoices;
+loadVoices();
+
+
+function speakResult() {
+
+    let text = "";
+
+    text += "Selected role is {{ role }}. ";
+    text += "Your resume score is {{ score }} percent. ";
+
+    text += "Matched skills are: {% for m in matched %}{{ m }}, {% endfor %}. ";
+
+    text += "Missing skills are: {% for ms in missing_skills %}{{ ms }}, {% endfor %}. ";
+
+    text += "Suggestions: {% for s in suggestions %}{{ s }}. {% endfor %}";
+
+    speech = new SpeechSynthesisUtterance(text);
+
+    let selectedIndex = document.getElementById("voiceSelect")?.value;
+
+    let voices = window.speechSynthesis.getVoices();
+
+    if (voices[selectedIndex]) {
+        speech.voice = voices[selectedIndex];
+    }
+
+    speech.rate = 1;
+    speech.pitch = 1;
+
+    window.speechSynthesis.speak(speech);
+}
+
+function stopSpeech() {
+    window.speechSynthesis.cancel();
+}
+
+</script>
+
+<script>
+document.addEventListener("mousemove", (e) => {
+    const glow = document.createElement("div");
+    glow.style.position = "fixed";
+    glow.style.left = e.clientX + "px";
+    glow.style.top = e.clientY + "px";
+    glow.style.width = "8px";
+    glow.style.height = "8px";
+    glow.style.background = "rgba(255,255,255,0.3)";
+    glow.style.borderRadius = "50%";
+    glow.style.pointerEvents = "none";
+    glow.style.zIndex = "999";
+
+    document.body.appendChild(glow);
+
+    setTimeout(() => glow.remove(), 300);
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const pieCtx = document.getElementById('skillPieChart').getContext('2d');
+
+const skillPieChart = new Chart(pieCtx, {
+    type: 'pie',
+    data: {
+        labels: ['Matched Skills', 'Missing Skills'],
+        datasets: [{
+            data: [
+                {{ matched|length }},
+                {{ missing_skills|length }}
+            ],
+            backgroundColor: [
+                '#22c55e',  // green
+                '#ef4444'   // red
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        plugins: {
+            legend: {
+                labels: {
+                    color: 'white'
+                }
+            }
+        }
+    }
+});
+</script>
+<script>
+const skillLabels = [
+    {% for m in matched %}"{{ m }}",{% endfor %}
+    {% for ms in missing_skills %}"{{ ms }}",{% endfor %}
+];
+
+const skillData = [
+    {% for m in matched %}100,{% endfor %}
+    {% for ms in missing_skills %}30,{% endfor %}
+];
+
+const radarCtx = document.getElementById('radarChart').getContext('2d');
+
+new Chart(radarCtx, {
+    type: 'radar',
+    data: {
+        labels: skillLabels,
+        datasets: [{
+            label: 'Skill Strength',
+            data: skillData,
+            backgroundColor: 'rgba(34,197,94,0.2)',
+            borderColor: '#22c55e',
+            borderWidth: 2,
+            pointBackgroundColor: '#22c55e'
+        }]
+    },
+    options: {
+        responsive: true,
+        scales: {
+            r: {
+                min: 0,
+                max: 100,
+                angleLines: { color: "rgba(255,255,255,0.2)" },
+                grid: { color: "rgba(255,255,255,0.1)" },
+                pointLabels: { color: "white" }
+            }
+        },
+        plugins: {
+            legend: { display: false }
+        }
+    }
+});
+</script>
+</body>
+</html>
