@@ -198,7 +198,13 @@ def index():
 
         if len(resume.split()) < 100:
             suggestions.append("Your resume is too short. Add more details about your experience and projects.")
-
+        
+        growth_data = [
+                {"version": "V1", "score": max(score - 30, 10)},
+                {"version": "V2", "score": max(score - 20, 20)},
+                {"version": "V3", "score": max(score - 10, 30)},
+                {"version": "Current", "score": score}
+            ]
         return render_template("result.html",
                     keywords=keywords,
                     entities=entities,
@@ -218,12 +224,6 @@ def index():
                 )
 
     return render_template("index.html")
-    growth_data = [
-    {"version": "V1", "score": max(score - 30, 10)},
-    {"version": "V2", "score": max(score - 20, 20)},
-    {"version": "V3", "score": max(score - 10, 30)},
-    {"version": "Current", "score": score}
-]
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
