@@ -406,69 +406,6 @@ canvas {
     max-width: 400px;
 }
 
-.circle {
-    width: 150px;
-    height: 150px;
-    border-radius: 50%;
-    background: conic-gradient(
-        #ff6a00 calc({{ score }} * 1%),
-        rgba(255,255,255,0.1) 0
-    );
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 20px auto;
-}
-
-.inner {
-    width: 110px;
-    height: 110px;
-    background: #020617;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.container {
-    animation: fadeIn 1s ease-in-out;
-}
-button:active {
-    transform: scale(0.95);
-}
-.dashboard {
-    display: flex;
-    gap: 20px;
-    width: 95%;
-    max-width: 1200px;
-}
-
-.left-panel {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.right-panel {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-.card {
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(20px);
-    border-radius: 15px;
-    padding: 20px;
-    border: 1px solid rgba(255,255,255,0.1);
-
-    transition: 0.3s;
-}
-
-.card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 0 25px rgba(255,106,0,0.4);
-}
 </style>
 </head>
     
@@ -495,57 +432,27 @@ button:active {
     <!-- IMAGE -->
     <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" width="80">
 
-    <div class="dashboard">
+    <div class="container">
 
-    <!-- LEFT SIDE -->
-    <div class="left-panel">
-        <div class="card">
-            <h3>🧠 Skills</h3>
-
-            <h4>Matched</h4>
-            {% for m in matched %}
-                <span class="tag green">✔ {{ m }}</span>
-            {% endfor %}
-
-            <h4>Missing</h4>
-            {% for ms in missing_skills %}
-                <span class="tag red">✖ {{ ms }}</span>
-            {% endfor %}
-        </div>
-
-        <div class="card">
-            <h3>💡 Suggestions</h3>
-            {% for s in suggestions %}
-                <p>🤖 {{ s }}</p>
-            {% endfor %}
-        </div>
-    </div>
-
-    <!-- RIGHT SIDE -->
-    <div class="right-panel">
-        <div class="card">
-            <h3>📊 Score</h3>
-            <h1 id="scoreCounter">0%</h1>
-        </div>
-
-        <div class="card">
-            <canvas id="barChart"></canvas>
-        </div>
-
-        <div class="card">
-            <canvas id="skillPieChart"></canvas>
-        </div>
-
-        <div class="card">
-            <canvas id="radarChart"></canvas>
-        </div>
-    </div>
-
+        <h3>Resume Score</h3>
+        <div class="score-card">
+    <h2>🎯 Job Match Score</h2>
+    <h1>{{ job_match_score }}%</h1>
+</div>
+<!-- Progress Bar -->
+<div class="progress-bar">
+    <div class="progress" style="
+        width: {{ job_match_score }}%;
+        background:
+        {% if job_match_score > 70 %}#22c55e
+        {% elif job_match_score > 40 %}#facc15
+        {% else %}#ef4444{% endif %};
+    "></div>
 </div>
 
 <div class="hero-score">
     <h2>Your Resume Score</h2>
-    <h1 id="scoreCounter">0%</h1>
+    <h1>{{ score }}%</h1>
 </div>
 
 <button onclick="speakResult()">▶ Start</button>
@@ -580,8 +487,6 @@ button:active {
 
 <hr>
 <h2>📊 ATS Score Breakdown</h2>
-<h2>📊 ATS Comparison</h2>
-<canvas id="barChart"></canvas>
 <h2>🥧 Skill Distribution</h2>
 <canvas id="skillPieChart" width="300" height="300"></canvas>
 <div class="breakdown">
@@ -770,21 +675,28 @@ document.addEventListener("mousemove", (e) => {
 <script>
 const pieCtx = document.getElementById('skillPieChart').getContext('2d');
 
-new Chart(pieCtx, {
-    type: 'doughnut',   // 👈 better than pie (premium look)
+const skillPieChart = new Chart(pieCtx, {
+    type: 'pie',
     data: {
         labels: ['Matched Skills', 'Missing Skills'],
         datasets: [{
-            data: [{{ matched|length }}, {{ missing_skills|length }}],
-            backgroundColor: ['#22c55e', '#ef4444'],
-            borderWidth: 0
+            data: [
+                {{ matched|length }},
+                {{ missing_skills|length }}
+            ],
+            backgroundColor: [
+                '#22c55e',  // green
+                '#ef4444'   // red
+            ],
+            borderWidth: 1
         }]
     },
     options: {
-        cutout: '65%',   // 👈 makes it donut style
         plugins: {
             legend: {
-                labels: { color: 'white' }
+                labels: {
+                    color: 'white'
+                }
             }
         }
     }
@@ -810,19 +722,20 @@ new Chart(radarCtx, {
         datasets: [{
             label: 'Skill Strength',
             data: skillData,
-            backgroundColor: 'rgba(255,106,0,0.2)',
-            borderColor: '#ff6a00',
-            pointBackgroundColor: '#ff6a00',
-            borderWidth: 2
+            backgroundColor: 'rgba(34,197,94,0.2)',
+            borderColor: '#22c55e',
+            borderWidth: 2,
+            pointBackgroundColor: '#22c55e'
         }]
     },
     options: {
+        responsive: true,
         scales: {
             r: {
                 min: 0,
                 max: 100,
-                grid: { color: "rgba(255,255,255,0.1)" },
                 angleLines: { color: "rgba(255,255,255,0.2)" },
+                grid: { color: "rgba(255,255,255,0.1)" },
                 pointLabels: { color: "white" }
             }
         },
@@ -831,58 +744,6 @@ new Chart(radarCtx, {
         }
     }
 });
-
 </script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-new Chart(document.getElementById("barChart"), {
-    type: "bar",
-    data: {
-        labels: ["Skills", "Keywords", "Length"],
-        datasets: [{
-            data: [{{skills_score}}, {{keyword_score}}, {{length_score}}],
-            backgroundColor: ["#22c55e", "#3b82f6", "#f59e0b"]
-        }]
-    },
-    options: {
-        plugins: { legend: { display: false } },
-        scales: {
-            x: { ticks: { color: "white" } },
-            y: { ticks: { color: "white" } }
-        }
-    }
-});
-</script>
-<script>
-const barCtx = document.getElementById('barChart').getContext('2d');
-
-new Chart(barCtx, {
-    type: 'bar',
-    data: {
-        labels: ['Skills', 'Keywords', 'Length'],
-        datasets: [{
-            label: 'ATS Score',
-            data: [{{ skills_score }}, {{ keyword_score }}, {{ length_score }}],
-            backgroundColor: ['#22c55e', '#3b82f6', '#facc15']
-        }]
-    },
-    options: {
-        plugins: {
-            legend: { display: false }
-        },
-        scales: {
-            x: {
-                ticks: { color: 'white' }
-            },
-            y: {
-                ticks: { color: 'white' },
-                beginAtZero: true,
-                max: 100
-            }
-        }
-    }
-});
-</script>
-
 </body>
 </html>
